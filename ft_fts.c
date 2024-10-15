@@ -12,16 +12,17 @@
 
 #include <unistd.h>
 #include <stdarg.h>
+#include "ft_printf.h"
 
 int	ft_putchar(char c)
 {
-    return (write(1, &c, 1));
+	return (write(1, &c, 1));
 }
 
 int	ft_putnbr(int nb)
 {
 	int				i;
-	unsigned int	nbr;
+	unsigned long long	nbr;
 
 	i = 0;
 	if (nb < 0)
@@ -35,8 +36,28 @@ int	ft_putnbr(int nb)
 	if (nbr / 10 != 0)
 		ft_putnbr(nbr / 10);
 	i += ft_putchar(nbr % 10 + 48);
-	i++;
 	return (i);
+}
+
+int	ft_putnbr_unsigned(unsigned int n)
+{
+	int	size;
+
+	size = 0;
+	if (n == 0)
+		size += ft_putchar('0');
+	else
+	{
+		if (n / 10 != 0)
+			ft_putnbr_unsigned(n / 10);
+		ft_putchar((n % 10) + '0');
+		while (n > 0)
+		{
+			n /= 10;
+			size++;
+		}
+	}
+	return (size);
 }
 
 int	ft_putstr(char *str)
@@ -49,5 +70,5 @@ int	ft_putstr(char *str)
 		write(1, &str[i], 1);
 		i++;
 	}
-	return (i)
+	return (i);
 }

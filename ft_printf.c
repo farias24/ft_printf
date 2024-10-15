@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include <stdarg.h>
-#include "libftprint.h"
+#include "ft_printf.h"
 
 int	ft_type(char c, va_list args)
 {
@@ -19,37 +19,37 @@ int	ft_type(char c, va_list args)
 
 	size = 0;
 	if (c == 's')
-		size += ft_putstr((char *)va_arg(args, int *));
+		size += ft_putstr(va_arg(args, char *));
 	else if (c == 'c')
 		size += ft_putchar((char)va_arg(args, int));
 	else if (c == 'd' || c == 'i')
 		size += ft_putnbr(va_arg(args, int));
 	else if (c == 'p')
-		size += ft_printpointer(va_arg(args, int));
+		size += ft_print_pointer((unsigned long long)va_arg(args, void *));
 	else if (c == 'u')
-	else if (c == 'x')
-    else if (c == 'X')
-    else if (c == '%')
-		ft_putchar('%');
-	return (size)
+		size += ft_putnbr_unsigned(va_arg(args, unsigned int));
+	else if (c == 'x' || c == 'X')
+		size += ft_print_hexadecimal(va_arg(args, unsigned int), c);
+	else if (c == '%')
+		size += ft_putchar('%');
+	return (size);
 }
 
 int	ft_printf(char const *str, ...)
 {
-	int	i;
-	int 	cont;
+	int		i;
+	int		cont;
 	va_list	args;
 
 	i = 0;
 	cont = 0;
 	va_start(args, str);
-
 	while (str[i])
 	{
 		if (str[i] == '%')
 		{
 			i++;
-			cont += ft_type(str[i++]);
+			cont += ft_type(str[i], args);
 		}
 		else
 		{
